@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>在线Base64解密工具</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f8ff;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .ad-banner {
+            width: 100%;
+            text-align: center;
+            margin: 10px 0;
+        }
+        .ad-banner img {
+            max-width: 100%;
+            height: auto;
+        }
+        .container {
+            width: 90%;
+            max-width: 600px;
+            background-color: #ffffff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        h1 {
+            color: #007bff;
+            text-align: center;
+        }
+        p {
+            color: #333333;
+            text-align: center;
+        }
+        textarea {
+            width: 90%;
+            height: 100px;
+            margin: 10px 0;
+            padding: 10px;
+            border: 1px solid #007bff;
+            border-radius: 4px;
+            font-size: 16px;
+            resize: none;
+            display: block; /* 新增样式以确保居中 */
+            margin-left: auto; /* 新增样式以确保居中 */
+            margin-right: auto; /* 新增样式以确保居中 */
+        }
+        .button-container {
+            display: flex;
+            justify-content: center;
+            margin: 10px 0;
+        }
+        button {
+            width: 45%;
+            padding: 10px;
+            margin: 5px 2.5%;
+            background-color: #007bff;
+            color: #ffffff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .result {
+            margin-top: 20px;
+            position: relative;
+        }
+        .result textarea {
+            cursor: pointer;
+        }
+        .result .copy-message {
+            position: absolute;
+            top: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #007bff;
+            color: #ffffff;
+            padding: 5px 10px;
+            border-radius: 4px;
+            display: none;
+        }
+        .usage {
+            margin-top: 20px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="ad-banner">
+        <img src="https://hb.seenwon.com/img1.png" alt="广告图片">
+    </div>
+    <div class="container">
+        <h1>在线Base64解密工具</h1>
+        <p>请输入或粘贴您想要解密的Base64字符串</p>
+        <textarea id="inputText" placeholder="在这里输入或粘贴Base64字符串..."></textarea>
+        <div class="button-container">
+            <button onclick="encrypt()">加密</button>
+            <button onclick="decrypt()">解密</button>
+        </div>
+        <div class="result">
+            <textarea id="outputText" readonly></textarea>
+            <div class="copy-message">已复制到剪贴板</div>
+        </div>
+        <div class="usage">
+            <p>使用说明：输入或粘贴Base64字符串后，点击“加密”或“解密”按钮即可得到结果。</p>
+        </div>
+    </div>
+    <div class="ad-banner">
+        <img src="https://hb.seenwon.com/img1.png" alt="广告图片">
+    </div>
+
+    <script>
+        function encrypt() {
+            const inputText = document.getElementById('inputText').value;
+            const encoder = new TextEncoder();
+            const encoded = encoder.encode(inputText);
+            const encryptedText = btoa(String.fromCharCode.apply(null, encoded));
+            document.getElementById('outputText').value = encryptedText;
+        }
+
+        function decrypt() {
+            const inputText = document.getElementById('inputText').value;
+            try {
+                const decoded = atob(inputText);
+                const decoder = new TextDecoder();
+                const decryptedText = decoder.decode(new Uint8Array(decoded.split('').map(char => char.charCodeAt(0))));
+                document.getElementById('outputText').value = decryptedText;
+            } catch (e) {
+                document.getElementById('outputText').value = '解密失败，请检查输入是否为有效的Base64字符串。';
+            }
+        }
+
+        document.getElementById('outputText').addEventListener('click', function() {
+            const outputText = document.getElementById('outputText');
+            outputText.select();
+            document.execCommand('copy');
+            showCopyMessage();
+        });
+
+        function showCopyMessage() {
+            const copyMessage = document.querySelector('.result .copy-message');
+            copyMessage.style.display = 'block';
+            setTimeout(() => {
+                copyMessage.style.display = 'none';
+            }, 2000);
+        }
+    </script>
+</body>
+</html>
